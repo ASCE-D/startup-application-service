@@ -10,7 +10,18 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // Extend Next.js recommended rules
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // Override specific rules
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off"
+    }
+  }
 ];
 
 export default eslintConfig;

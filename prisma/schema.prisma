@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ApplicationStatus {
+  APPLIED
+  SHORTLISTED
+  SELECTED
+  REJECTED
+}
+
+enum FileType {
+  RESUME
+  PITCH_DECK
+}
+
+enum VideoType {
+  UPLOAD
+  YOUTUBE
+  VIMEO
+}
+
+model StartupApplication {
+  id          String @id @default(uuid())
+  startupName String
+  idea        String
+  sector      String
+  country     String
+  techStack   String
+
+  status  ApplicationStatus @default(APPLIED)
+  isDraft Boolean           @default(false)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  statusUpdatedAt DateTime @default(now())
+
+  founderId String
+
+  founder       FounderProfile     @relation(fields: [founderId], references: [id], onDelete: Cascade)
+  files         ApplicationFile[]
+  videos        ApplicationVideo[]
+  evaluations   Evaluation[]
+  statusHistory StatusHistory[]
+
+  @@unique([founderId])
+  @@map("startup_applications")
+}
+
+model ApplicationFile {
+  id       String   @id @default(uuid())
+  fileName String
+  fileType FileType
+  fileUrl  String
+
+  originalName String
+  fileSize     Int
+  mimeType     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applicationId String
+  application   StartupApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("application_files")
+}
+
+model ApplicationVideo {
+  id        String    @id @default(uuid())
+  videoType VideoType
+  videoUrl  String
+  title     String?
+  fileSize  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applicationId String
+
+  application StartupApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("application_videos")
+}
+
+model FounderProfile {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applications StartupApplication[]
+
+  @@map("founder_profiles")
+}
+
+model Evaluation {
+  id         String @id @default(uuid())
+  reviewerId String
+  score      Int
+  feedback   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applicationId String
+  application   StartupApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("evaluations")
+}
+
+model StatusHistory {
+  id            String             @id @default(uuid())
+  fromStatus    ApplicationStatus?
+  toStatus      ApplicationStatus
+  applicationId String
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  application StartupApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("status_history")
+}
