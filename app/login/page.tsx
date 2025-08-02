@@ -45,7 +45,7 @@ function LoginSignupForm(){
       if (res?.error) {
         setError(res.error);
       } else {
-        router.push("/founder"); // or wherever you want to go
+        router.push("/application"); // or wherever you want to go
       }
     } else {
       // Handle signup
@@ -65,7 +65,7 @@ function LoginSignupForm(){
         .then((data) => {
           toast.success("Successfully registered");
           setLoading(false);
-          router.push("/application");
+          router.push("/login");
         })
         .catch((err) => {
           toast.error(err.message);

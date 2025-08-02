@@ -16,6 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
 import { Upload, Loader2, Link, Video } from "lucide-react";
 import { getSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 // Type definitions
 interface FormData {
@@ -91,6 +92,8 @@ export default function FounderSubmissionPage() {
             founderName: session?.user?.name || "",
             email: session?.user?.email || "",
           }));
+        }else {
+          redirect("/login");
         }
       }
 
@@ -580,6 +583,8 @@ export default function FounderSubmissionPage() {
                 `Upload ${videoMode === "upload" ? "Video File" : "Video Link"}`
               )}
             </Button>
+
+            <Button onClick={()=> redirect("/founder")}></Button>
 
             {videoResult && (
               <Alert

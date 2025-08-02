@@ -208,6 +208,11 @@ const StatusPage = () => {
                         <Calendar className="h-4 w-4" />
                         Applied {formatDate(application.createdAt)}
                       </div>
+
+                      <div className="flex items-center gap-1">
+                        
+                        # {application.id}
+                      </div>
                     </div>
                   </div>
                   <Badge

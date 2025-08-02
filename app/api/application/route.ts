@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -10,7 +9,12 @@ export async function GET(request: NextRequest) {
         videos: true,
         statusHistory: true,
         files: true,
-
+        founder: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
       },
     });
 
