@@ -584,7 +584,7 @@ export default function FounderSubmissionPage() {
               )}
             </Button>
 
-            <Button onClick={()=> redirect("/founder")}></Button>
+            <Button className="w-full" onClick={()=> redirect("/founder")}>view application</Button>
 
             {videoResult && (
               <Alert
